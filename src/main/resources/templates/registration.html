@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>Create an account</p>
+<form action="@{/register}" method="post" th:object="${user}">
+    <input type="text" placeholder="email" th:field="*{email}" />
+    <input type="password" placeholder="password" />
+    <input type="password" placeholder="confirm password" />
+    <input type="submit" value="create"/>
+
+</form>
+
+</body>
+</html>
