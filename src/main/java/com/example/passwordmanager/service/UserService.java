@@ -6,6 +6,7 @@ import com.example.passwordmanager.dto.GetUserInfoDTO;
 import com.example.passwordmanager.entity.User;
 import com.example.passwordmanager.mapper.UserMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javassist.NotFoundException;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 @Service
 public class UserService implements IUserService {
 
+    @Autowired
     private UserDAO userDAO;
 
     @Override
