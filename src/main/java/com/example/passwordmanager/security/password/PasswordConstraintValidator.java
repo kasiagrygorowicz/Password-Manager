@@ -43,10 +43,10 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         if (result.isValid()) {
             return true;
         }
-        context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate(
-                "Passsword has to be 8 character long, contain minimum 3 digits, 1 uppercase letter and 1 special character")
-                .addConstraintViolation();
+//        context.disableDefaultConstraintViolation();
+//        context.buildConstraintViolationWithTemplate(
+//                "Passsword has to be 8 character long, contain minimum 3 digits, 1 uppercase letter and 1 special character")
+//                .addConstraintViolation();
         return false;
     }
 }
