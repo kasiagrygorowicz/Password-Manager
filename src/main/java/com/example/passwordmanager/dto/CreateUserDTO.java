@@ -1,7 +1,7 @@
 package com.example.passwordmanager.dto;
 
-import com.example.passwordmanager.security.password.FieldMatch;
-import com.example.passwordmanager.security.password.ValidPassword;
+import com.example.passwordmanager.security.password.validation.FieldMatch;
+import com.example.passwordmanager.security.password.validation.ValidPassword;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

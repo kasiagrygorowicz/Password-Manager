@@ -7,6 +7,7 @@ import com.example.passwordmanager.entity.User;
 import com.example.passwordmanager.mapper.UserMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javassist.NotFoundException;
 import java.sql.SQLException;
@@ -17,9 +18,20 @@ public class UserService implements IUserService {
     @Autowired
     private UserDAO userDAO;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public GetUserInfoDTO add(CreateUserDTO user) throws SQLException {
-        User u = userDAO.save(UserMapper.CreateUserDTOToUser(user));
+        if(userDAO.findByEmail(user.getEmail())!=null){
+            throw new RuntimeException("This user already exists");
+        }
+
+        User u = UserMapper.CreateUserDTOToUser(user);
+        u.setPassword(passwordEncoder.encode(u.getPassword()));
+        u.setMasterPassword(passwordEncoder.encode(u.getMasterPassword()));
+        userDAO.save(u);
+
         return UserMapper.UserToGetUserInfoDTO(u);
     }
 

@@ -1,13 +1,9 @@
-package com.example.passwordmanager.security.password;
+package com.example.passwordmanager.security.password.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.BeanWrapperImpl;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
 

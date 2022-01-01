@@ -40,9 +40,11 @@
     <div th:each="err : ${#fields.errors()}" th:text="${err}" class=" alert alert-danger">
 
     </div>
+    <div th:if="${errorMessage}"  th:text="${errorMessage}"class=" alert alert-danger"></div>
 
 
 </form>
+<a th:href="@{/login}">Already have an account? Login !!!</a>
 
 </body>
 </html>

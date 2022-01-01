@@ -1,4 +1,4 @@
-package com.example.passwordmanager.security.password;
+package com.example.passwordmanager.security.password.validation;
 
 
 
@@ -7,7 +7,6 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
 @Constraint(validatedBy = PasswordConstraintValidator.class)

@@ -27,24 +27,32 @@ public class UserRestController {
         return "registration";
     }
 
+    @GetMapping("/login")
+    public String displayLoginForm(Model model){
+        model.addAttribute("user", new CreateUserDTO());
+        return "login";
+    }
+
 
     @PostMapping("/register")
-    public String registerNewAccount(@Valid @ModelAttribute("user") CreateUserDTO user, BindingResult bindingResult) throws SQLException {
-//        userService.add(user);
-//        System.out.println(user.getEmail());
+    public String registerNewAccount(@Valid @ModelAttribute("user") CreateUserDTO user, BindingResult bindingResult,Model model) throws SQLException {
 
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getFieldErrors());
-            System.out.println(bindingResult.getErrorCount());
-//            System.out.println(bindingResult.get);
             return "registration";
 
         } else {
+            try {
+                userService.add(user);
+            }catch(RuntimeException e){
+                model.addAttribute("errorMessage",e.getMessage());
+                return "registration";
+            }
             return "user-dashboard";
         }
 
-
 }
+
+
 
 
 }

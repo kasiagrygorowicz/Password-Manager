@@ -4,8 +4,10 @@ package com.example.passwordmanager.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -25,12 +27,26 @@ public class User {
     @Column(nullable=false)
     private String password;
 
+    @Column(nullable=false,length=60,name="master_password")
+    private String masterPassword;
+
     @OneToMany(mappedBy = "user")
     private List<Entry> entries = null;
 
-    public User(String email, String password){
+    @Column(nullable = false, name="is_locked")
+    private boolean isLocked;
+
+    @Column(name="lock_time")
+    private Date lockTime;
+
+
+    public User(String email, String password,String masterPassword){
         this.email=email;
         this.password=password;
+        this.masterPassword=masterPassword;
+        this.isLocked=false;
+        this.lockTime=null;
+
     }
 
 }

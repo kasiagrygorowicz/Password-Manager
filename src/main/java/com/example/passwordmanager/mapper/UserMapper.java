@@ -7,7 +7,7 @@ import com.example.passwordmanager.entity.User;
 public class UserMapper {
 
     public static User CreateUserDTOToUser(CreateUserDTO u){
-       return new User(u.getEmail(),u.getPassword());
+       return new User(u.getEmail(),u.getPassword(),u.getMasterPassword());
     }
 
     public static GetUserInfoDTO UserToGetUserInfoDTO(User u){
