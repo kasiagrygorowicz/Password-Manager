@@ -1,4 +1,4 @@
-package com.example.passwordmanager.security.password.validation;
+package com.example.passwordmanager.security.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

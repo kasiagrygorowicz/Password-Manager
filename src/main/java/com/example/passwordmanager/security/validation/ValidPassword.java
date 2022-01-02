@@ -1,4 +1,4 @@
-package com.example.passwordmanager.security.password.validation;
+package com.example.passwordmanager.security.validation;
 
 
 

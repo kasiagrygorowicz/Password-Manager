@@ -1,4 +1,4 @@
-package com.example.passwordmanager.security.password.listener;
+package com.example.passwordmanager.security.listener;
 
 import com.example.passwordmanager.service.LoginAttemptService;
 import org.springframework.beans.factory.annotation.Autowired;

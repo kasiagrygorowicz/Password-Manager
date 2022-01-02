@@ -7,6 +7,9 @@ import com.example.passwordmanager.entity.User;
 import com.example.passwordmanager.mapper.UserMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javassist.NotFoundException;
@@ -53,6 +56,12 @@ public class UserService implements IUserService {
         }
         return UserMapper.UserToGetUserInfoDTO(user);
     }
+
+    @Override
+    public User findById(int id) {
+        return userDAO.findByid((long) id);
+    }
+
 
 
 }

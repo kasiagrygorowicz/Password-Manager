@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,8 +33,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Entry> entries = null;
 
-    @Column(nullable = false, name="is_locked")
-    private boolean isLocked;
+    @Column(nullable = false, name="is_active")
+    private boolean isActive;
 
     @Column(name="lock_time")
     private Date lockTime;
@@ -44,9 +44,12 @@ public class User {
         this.email=email;
         this.password=password;
         this.masterPassword=masterPassword;
-        this.isLocked=false;
+        this.isActive=true;
         this.lockTime=null;
 
     }
 
+    public boolean getIsActive() {
+        return isActive;
+    }
 }

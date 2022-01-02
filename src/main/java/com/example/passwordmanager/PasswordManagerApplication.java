@@ -1,5 +1,6 @@
 package com.example.passwordmanager;
 
+import com.example.passwordmanager.dao.UserDAO;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -10,8 +11,10 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@EnableJpaRepositories(basePackageClasses = UserDAO.class)
 public class PasswordManagerApplication {
 
     public static void main(String[] args) {
