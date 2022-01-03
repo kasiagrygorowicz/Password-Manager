@@ -28,10 +28,9 @@ public class UserService implements IUserService {
 
     @Override
     public GetUserInfoDTO add(CreateUserDTO user) throws SQLException {
-        if(userDAO.findByUsername(user.getUsername())!=null){
+        if (userDAO.findByUsername(user.getUsername()) != null) {
             throw new RuntimeException("This user already exists");
         }
-
         User u = UserMapper.CreateUserDTOToUser(user);
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         u.setMasterPassword(passwordEncoder.encode(u.getMasterPassword()));
@@ -40,30 +39,15 @@ public class UserService implements IUserService {
         return UserMapper.UserToGetUserInfoDTO(u);
     }
 
+
     @Override
-    public void deleteByEmail(String email) throws NotFoundException {
+    public User findByEmail(String email) {
         User user = userDAO.findByUsername(email);
         if (user == null) {
-            throw new NotFoundException("Account with email:  " + email + " does not exist");
+            throw new RuntimeException("Account with email:  " + email + " does not exist");
         }
-//        userDAO.deleteByEmail(email);
-
+        return user;
     }
-
-    @Override
-    public User findByEmail(String email) throws NotFoundException {
-        User user = userDAO.findByUsername(email);
-        if (user == null) {
-            throw new NotFoundException("Account with email:  " + email + " does not exist");
-        }
-         return user;
-    }
-
-    @Override
-    public User findById(int id) {
-        return userDAO.findByid((long) id);
-    }
-
 
     @Override
     public User getCurrent() throws NotFoundException {
@@ -83,10 +67,9 @@ public class UserService implements IUserService {
         return findByEmail(username);
     }
 
-//    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<Entry> getUserPasswords() throws NotFoundException {
         User current = getCurrent();
-        return (List<Entry>) current.getEntries();
+        return current.getEntries();
     }
 }

@@ -17,8 +17,8 @@ public class LoginPageFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (SecurityContextHolder.getContext().getAuthentication() != null
                 && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                && ((HttpServletRequest)request).getRequestURI().equals("/login")) {
-            ((HttpServletResponse)response).sendRedirect("/dashboard");
+                && ((HttpServletRequest) request).getRequestURI().equals("/login")) {
+            ((HttpServletResponse) response).sendRedirect("/dashboard");
         }
         chain.doFilter(request, response);
     }

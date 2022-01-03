@@ -1,4 +1,4 @@
-package com.example.passwordmanager.security.password;
+package com.example.passwordmanager;
 
 import com.example.passwordmanager.security.securityService.MyUserDetailsService;
 
@@ -51,6 +51,12 @@ public class PasswordManagerSecurityConfiguration extends WebSecurityConfigurerA
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/dashboard")
                 .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/login")
         ;
 
 

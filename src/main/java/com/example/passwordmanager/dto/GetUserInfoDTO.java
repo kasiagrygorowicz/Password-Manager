@@ -13,5 +13,4 @@ public class GetUserInfoDTO {
     @NotNull
     private String username;
 
-
 }

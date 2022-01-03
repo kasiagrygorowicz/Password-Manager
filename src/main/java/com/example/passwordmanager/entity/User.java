@@ -13,48 +13,46 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false,unique=true,length=50)
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable=false,length=60,name="master_password")
+    @Column(nullable = false, length = 60, name = "master_password")
     private String masterPassword;
 
     @OneToMany(mappedBy = "user")
     private List<Entry> entries = null;
 
-    @Column(nullable = false, name="is_active")
+    @Column(nullable = false, name = "is_active")
     private boolean isActive;
 
-    @Column(name="lock_time")
+    @Column(name = "lock_time")
     private Date lockTime;
 
 
-    public User(String username, String password, String masterPassword){
+    public User(String username, String password, String masterPassword) {
         this.username = username;
-        this.password=password;
-        this.masterPassword=masterPassword;
-        this.isActive=true;
-        this.lockTime=null;
+        this.password = password;
+        this.masterPassword = masterPassword;
+        this.isActive = true;
+        this.lockTime = null;
 
     }
 
-    public boolean getIsActive() {
-        return isActive;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

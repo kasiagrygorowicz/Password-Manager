@@ -9,7 +9,9 @@ import java.util.List;
 public interface IEntryService {
 
     public List<Entry> GetAll(int id);
-    public void add(String link, String password,int id);
+
+    public void add(String link, String password, int id);
+
     public void delete(Long id);
 
 }

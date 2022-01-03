@@ -14,14 +14,13 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UserDAO userDAO;
 
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userDAO.findByUsername(email);
         if (user == null) {
             throw new UsernameNotFoundException(email);
         }
-
         return user;
     }
 }
+//
