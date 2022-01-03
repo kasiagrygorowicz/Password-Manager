@@ -3,7 +3,9 @@ package com.example.passwordmanager.rest;
 import com.example.passwordmanager.dto.CreateUserDTO;
 import com.example.passwordmanager.entity.Entry;
 import com.example.passwordmanager.entity.User;
+import com.example.passwordmanager.service.IEntryService;
 import com.example.passwordmanager.service.IUserService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,14 +23,24 @@ public class UserRestController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping("/user")
-    public String user() {
-        return ("<h1>Welcome User</h1>");
+    @Autowired
+    private IEntryService entryService;
+
+
+    @GetMapping("/list")
+    public String displayEntriesList(Model model) throws NotFoundException {
+        List<Entry> l = userService.getUserPasswords();
+        for (Entry e : l)
+            System.out.println(e.getId()+e.getWebsite()+e.getPassword());
+        model.addAttribute("passwords", l);
+
+        return "user-dashboard";
+
     }
 
 @GetMapping("/dashboard")
 public String displayUserDashboard(){
-//    User e = userService.findById(1);
+
     return "user-dashboard";
 }
     @GetMapping("/register")

@@ -4,10 +4,13 @@ package com.example.passwordmanager.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 @Getter
@@ -15,14 +18,14 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name="users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable=false,unique=true,length=50)
-    private String email;
+    private String username;
 
     @Column(nullable=false)
     private String password;
@@ -40,8 +43,8 @@ public class User {
     private Date lockTime;
 
 
-    public User(String email, String password,String masterPassword){
-        this.email=email;
+    public User(String username, String password, String masterPassword){
+        this.username = username;
         this.password=password;
         this.masterPassword=masterPassword;
         this.isActive=true;
@@ -50,6 +53,36 @@ public class User {
     }
 
     public boolean getIsActive() {
+        return isActive;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.asList(new SimpleGrantedAuthority("USER"));
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
         return isActive;
     }
 }

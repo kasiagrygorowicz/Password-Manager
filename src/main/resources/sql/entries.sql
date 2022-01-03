@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS entries;
 
 CREATE TABLE entries (
     id int NOT NULL AUTO_INCREMENT,
-    link varchar(255) NOT NULL,
+    website varchar(255) NOT NULL,
     password varchar(60) not null,
 	user_id int not null,
     PRIMARY KEY (id),

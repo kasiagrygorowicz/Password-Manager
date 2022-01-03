@@ -11,7 +11,7 @@ import lombok.Setter;
 public class GetUserInfoDTO {
 
     @NotNull
-    private String email;
+    private String username;
 
 
 }

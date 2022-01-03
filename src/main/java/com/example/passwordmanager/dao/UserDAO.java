@@ -8,10 +8,10 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 public interface UserDAO extends JpaRepository<User, Long> {
-    User findByEmail(String email);
+    User findByUsername(String username);
     User findByid(Long id);
 
-    @Transactional
-    @Modifying
-    void deleteByEmail(String email);
+//    @Transactional
+//    @Modifying
+//    void deleteByEmail(String email);
 }

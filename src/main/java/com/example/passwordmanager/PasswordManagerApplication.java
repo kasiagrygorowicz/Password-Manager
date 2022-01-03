@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
-@EnableJpaRepositories(basePackageClasses = UserDAO.class)
+//@EnableJpaRepositories(basePackageClasses = UserDAO.class)
 public class PasswordManagerApplication {
 
     public static void main(String[] args) {

@@ -2,10 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Dashboard</title>
 </head>
 <body>
-welcome in user dashboard
+<table class="table">
+    <thead>
+    <tr>
+        <th>Index</th>
+        <th>id</th>
+        <th>website</th>
+        <th>password</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="psw : ${passwords}">
+        <td th:text="${psw.id}"></td>
+        <td th:text="${psw.website}"></td>
+        <td th:text="${psw.password}"></td>
+
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

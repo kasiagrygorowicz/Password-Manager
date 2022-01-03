@@ -3,7 +3,6 @@ package com.example.passwordmanager.security.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
-
 import org.passay.AlphabeticalSequenceRule;
 import org.passay.DigitCharacterRule;
 import org.passay.LengthRule;
@@ -27,7 +26,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
                 new UppercaseCharacterRule(1),
                 new DigitCharacterRule(3),
                 new SpecialCharacterRule(1),
-                new AlphabeticalSequenceRule(3,false),
+                new AlphabeticalSequenceRule(3, false),
                 new WhitespaceRule()
         ));
 
@@ -35,10 +34,6 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         if (result.isValid()) {
             return true;
         }
-//        context.disableDefaultConstraintViolation();
-//        context.buildConstraintViolationWithTemplate(
-//                "Passsword has to be 8 character long, contain minimum 3 digits, 1 uppercase letter and 1 special character")
-//                .addConstraintViolation();
         return false;
     }
 }

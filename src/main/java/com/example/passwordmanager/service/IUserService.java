@@ -14,7 +14,8 @@ public interface IUserService {
 
     GetUserInfoDTO add(CreateUserDTO user) throws SQLException;
     void deleteByEmail(String email) throws ChangeSetPersister.NotFoundException, NotFoundException;
-    GetUserInfoDTO findByEmail(String email) throws ChangeSetPersister.NotFoundException, NotFoundException;
-
+    User findByEmail(String email) throws ChangeSetPersister.NotFoundException, NotFoundException;
+    User getCurrent() throws NotFoundException;
     User findById(int id);
+    List<Entry> getUserPasswords() throws NotFoundException;
 }

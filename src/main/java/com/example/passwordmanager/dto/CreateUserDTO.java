@@ -28,7 +28,7 @@ import lombok.Setter;
 public class CreateUserDTO {
 
     @NotNull
-    private String email;
+    private String username;
 
 
     @ValidPassword(message = "Password has to be 8 character long, contain minimum 3 digits, 1 uppercase letter and 1 special character")

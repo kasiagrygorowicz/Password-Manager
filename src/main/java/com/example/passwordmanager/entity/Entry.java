@@ -1,7 +1,10 @@
 package com.example.passwordmanager.entity;
 
-import javax.persistence.*;
+import lombok.Data;
+import lombok.Getter;
 
+import javax.persistence.*;
+@Data
 @Entity
 @Table(name="entries")
 public class Entry {
