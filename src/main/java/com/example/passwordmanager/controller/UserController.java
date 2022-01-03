@@ -74,8 +74,6 @@ public class UserController {
     @GetMapping("/dashboard")
     public String displayEntriesList(Model model) throws NotFoundException {
         List<Entry> l = userService.getUserPasswords();
-        for (Entry e : l)
-            System.out.println(e.getId()+e.getWebsite()+e.getPassword());
         model.addAttribute("passwords", l);
 
         return "dashboard";

@@ -10,6 +10,7 @@
 <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/1.12.9-1/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js}"></script>
+<link th:rel="stylesheet" th:href="@{assets/password-strength-meter/password.min.css}"/>
 <p>Create an account</p>
 
 <form th:action="@{/register}" method="post" th:object="${user}">
@@ -20,6 +21,9 @@
     <div class="form-group">
         <label>Password</label>
         <input type="password" id="password" th:field="*{password}" placeholder="password" name="password"/>
+        <div class="input-group-append">
+            <span class="input-group-text"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+        </div>
     </div>
     <div class="form-group">
         <label>Confirm password</label>
@@ -47,4 +51,29 @@
 <a th:href="@{/login}">Already have an account? Login !!!</a>
 
 </body>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{assets/password-strength-meter/password.min.js}"></script>
+
+<script>
+    $('#password').password({
+        closestSelector: '.form-group',
+        shortPass: 'The password is too short',
+        badPass: 'Weak; try combining letters & numbers',
+        goodPass: 'Medium; try using special characters',
+        strongPass: 'Strong password',
+        containsField: 'The password contains your username',
+        enterPass: 'Type your password',
+        showPercent: false,
+        showText: true, // shows the text tips
+        animate: true, // whether or not to animate the progress bar on input blur/focus
+        animateSpeed: 'fast', // the above animation speed
+        field: false, // select the match field (selector or jQuery instance) for better password checks
+        fieldPartialMatch: true, // whether to check for partials in field
+        minimumLength: 4 // minimum password length (below this threshold, the score is 0)
+    });
+</script>
 </html>

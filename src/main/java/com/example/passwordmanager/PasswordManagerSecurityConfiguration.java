@@ -45,7 +45,7 @@ public class PasswordManagerSecurityConfiguration extends WebSecurityConfigurerA
 //        http.addFilterBefore(
 //                new LoginPageFilter(), DefaultLoginPageGeneratingFilter.class);
         http.authorizeRequests()
-                .antMatchers("/dashboard").hasAuthority("USER")
+                .antMatchers("/dashboard").authenticated()
                 .antMatchers("/login", "/register")
                 .permitAll().and().formLogin().loginPage("/login")
                 .loginProcessingUrl("/login")
