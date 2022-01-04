@@ -10,6 +10,8 @@
 <script th:src="@{/webjars/popper.js/1.12.9-1/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js}"></script>
 
+<div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}">
+</div>
 
 <form th:action="@{/login}" method="post" th:object="${user}">
   <div class="form-group">

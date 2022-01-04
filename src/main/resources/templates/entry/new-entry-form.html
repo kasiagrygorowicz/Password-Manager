@@ -5,6 +5,21 @@
     <title>Add Entry</title>
 </head>
 <body>
-New entry
+<form th:action="@{/dashboard/addEntry}" method="post" th:object="${entry}">
+
+    <div class="form-group">
+        <label>Website</label>
+        <input type="text"  th:field="*{website}" placeholder="www.google.com"/>
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password"  th:field="*{password}" />
+    </div>
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Create">
+    </div>
+    <div th:if="${error}" th:text="${error}" class=" alert alert-danger"></div>
+</form>
+
 </body>
 </html>

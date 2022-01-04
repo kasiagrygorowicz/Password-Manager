@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,8 +29,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @Autowired
-    private IEntryService entryService;
+
 
 
     @GetMapping("/register")
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerNewAccount(@Valid @ModelAttribute("user") CreateUserDTO user, BindingResult bindingResult,Model model) throws SQLException {
+    public String registerNewAccount(@Valid @ModelAttribute("user") CreateUserDTO user, BindingResult bindingResult, Model model, RedirectAttributes attributes) throws SQLException {
 
         if (bindingResult.hasErrors()) {
             return "registration";
@@ -51,6 +51,7 @@ public class UserController {
                 model.addAttribute("errorMessage",e.getMessage());
                 return "registration";
             }
+            attributes.addFlashAttribute("success","New account registered successfully");
             return "redirect:/login";
         }
     }

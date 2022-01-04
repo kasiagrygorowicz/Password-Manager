@@ -5,10 +5,11 @@
     <title>Dashboard</title>
 </head>
 <body>
+<div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}">
+</div>
 <table class="table">
     <thead>
     <tr>
-        <th>Index</th>
         <th>id</th>
         <th>website</th>
         <th>password</th>
@@ -19,13 +20,17 @@
         <td th:text="${psw.id}"></td>
         <td th:text="${psw.website}"></td>
         <td th:text="${psw.password}"></td>
+        <td><a th:href="@{/dashboard/delete/__${psw.id}__}">Delete</a></td>
+        <td><a th:href="@{/dashboard/edit/__${psw.id}__}">Edit</a></td>
 
     </tr>
     </tbody>
 </table>
 
+<div class="container">
 <a href="/logout">Logout</a>
-<a href="/addEntry">Add new password</a>
+<a href="dashboard/addEntry">Add new password</a>
+</div>
 
 </body>
 </html>
