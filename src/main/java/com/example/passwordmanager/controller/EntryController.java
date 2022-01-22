@@ -56,22 +56,12 @@ public class EntryController {
             return "redirect:/dashboard/addEntry";
         } else {
 
-//            todo przeniesc enkrypcje do serwisu
-            IvParameterSpec iv = CBC.generateIV();
-            byte[] salt = CBC.generateSalt();
             try {
-                SecretKey key = CBC.getSecret(entry.getPassword(), salt);
-                String encryptedPassword = CBC.encrypt(entry.getPassword(), key, iv);
-                entry.setPassword(encryptedPassword);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (InvalidKeySpecException | UnsupportedEncodingException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-                e.printStackTrace();
+                entryService.add(entry);
+
+            } catch (Exception e) {
+                attributes.addFlashAttribute("\"error\"", e.getMessage());
             }
-
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            entryService.add(entry);
             attributes.addFlashAttribute("success", "New password was added successfully");
             return "redirect:/dashboard";
         }
@@ -81,27 +71,27 @@ public class EntryController {
     public String showPassword(@PathVariable Long id, Model model) {
         String website = entryService.getWebsite(id);
         model.addAttribute("website", website);
-        model.addAttribute("masterPassword", "");
+        model.addAttribute("masterPasswordEntered", null);
         model.addAttribute("id", id);
         model.addAttribute("isDecrypted", false);
+
         return "entry/show-password-form";
     }
 
-    @RequestMapping("/dashboard/show/{id}")
-    public String showPassword(@ModelAttribute("masterPassword") String masterPassword,@ModelAttribute("website") String website, RedirectAttributes attributes, Model model, @PathVariable String id) {
+    @PostMapping("/dashboard/show/{id}")
+    public String showPassword(@ModelAttribute("masterPasswordEntered") String masterPassword, RedirectAttributes attributes, Model model, @PathVariable Long id) {
+        System.out.println(masterPassword);
+        if (!passwordEncoder.matches("Password123$",userService.getMasterPassword())) {
 
-//        if (!passwordEncoder.matches(passwordEncoder.encode(masterPassword), userService.getMasterPassword())) {
-//            attributes.addFlashAttribute("error", "Master password not correct");
-//            return "redirect:/dashboard/show/"+id;
-//        }kto?
-
-        System.out.println(website);
+            attributes.addFlashAttribute("error", "Master password not correct");
+            return "redirect:/dashboard/show/"+id;
+        }
+        String website = entryService.getWebsite(id);
         model.addAttribute("masterPassword", "decrypted");
-//        model.addAttribute("website", website);
+        model.addAttribute("website", website);
         model.addAttribute("isDecrypted", true);
         return "entry/show-password-form";
     }
-
 
 
     @RequestMapping("/dashboard/delete/{id}")

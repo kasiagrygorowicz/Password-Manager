@@ -7,6 +7,7 @@ import com.example.passwordmanager.entity.Entry;
 import com.example.passwordmanager.entity.User;
 import com.example.passwordmanager.mapper.UserMapper;
 
+import com.example.passwordmanager.security.aes.CBC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +35,9 @@ public class UserService implements IUserService {
         User u = UserMapper.CreateUserDTOToUser(user);
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         u.setMasterPassword(passwordEncoder.encode(u.getMasterPassword()));
+        u.setLoginAttempts(0);
+        u.setIv(CBC.generateIV());
+        u.setSalt(CBC.generateSalt());
         userDAO.save(u);
 
         return UserMapper.UserToGetUserInfoDTO(u);
@@ -53,14 +57,14 @@ public class UserService implements IUserService {
     public User getCurrent() throws NotFoundException {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         String username = "";
-        User principal;
+        User user;
         if (null != securityContext.getAuthentication()) {
             if (securityContext.getAuthentication().getPrincipal().getClass() == String.class) {
                 username = (String) securityContext.getAuthentication().getPrincipal();
 
             } else {
-                principal = (User) securityContext.getAuthentication().getPrincipal();
-                username = principal.getUsername();
+                user = (User) securityContext.getAuthentication().getPrincipal();
+                username = user.getUsername();
 
             }
         }
@@ -82,6 +86,7 @@ public class UserService implements IUserService {
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
+        System.out.println(user.getMasterPassword());
         return user.getMasterPassword();
     }
 }

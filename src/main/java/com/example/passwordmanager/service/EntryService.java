@@ -10,8 +10,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.EntityNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,14 +44,27 @@ public class EntryService implements IEntryService {
     public void add(EditEntryDTO entry) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!passwordEncoder.matches(entry.getMasterPassword(),user.getMasterPassword())){
-            throw new RuntimeException("Wrong master password.\n Cannot edit !!!");
+            throw new RuntimeException("Wrong master password.\n Cannot add entry !!!");
         }
         Entry newEntry = new Entry();
-        newEntry.setPassword(entry.getPassword());
+        byte [] salt = user.getSalt();
+        String cipherPassword = null;
+        try {
+            SecretKey key = CBC.getSecret(entry.getMasterPassword(),salt);
+            cipherPassword = CBC.encrypt(entry.getPassword(),key,user.getIv());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException | UnsupportedEncodingException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        newEntry.setPassword(cipherPassword);
         newEntry.setUser(user);
         newEntry.setWebsite(entry.getWebsite());
 
         entryDAO.save(newEntry);
+
+
     }
 
 

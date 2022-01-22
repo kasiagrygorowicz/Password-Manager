@@ -40,6 +40,17 @@ public class User implements UserDetails {
     @Column(name = "lock_time")
     private Date lockTime;
 
+    @Column(name = "salt")
+    private byte[] salt;
+
+    @Column(name = "iv")
+    private byte[] iv;
+
+    @Column(name = "login_attempts")
+    private int loginAttempts;
+
+
+
 
     public User(String username, String password, String masterPassword) {
         this.username = username;
@@ -47,6 +58,10 @@ public class User implements UserDetails {
         this.masterPassword = masterPassword;
         this.isActive = true;
         this.lockTime = null;
+        this.loginAttempts =0;
+        this.salt=null;
+        this.iv=null;
+
 
     }
 
@@ -68,7 +83,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isActive;
     }
 
     @Override
@@ -78,6 +93,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isActive;
+        return true;
     }
 }

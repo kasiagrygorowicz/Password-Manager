@@ -17,7 +17,7 @@ import java.util.Base64;
 
 public class CBC {
 
-    public static IvParameterSpec generateIV() {
+    public static byte [] generateIV() {
 
         SecureRandom random = null;
         try {
@@ -28,7 +28,9 @@ public class CBC {
 
         byte[] iv = new byte[16];
         random.nextBytes(iv);
-        return new IvParameterSpec(iv);
+
+        return iv;
+
     }
 
     public static byte[] generateSalt() {
@@ -53,11 +55,11 @@ public class CBC {
         return secret;
     }
 
-    public static String encrypt(String password, SecretKey key, IvParameterSpec iv) throws UnsupportedEncodingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public static String encrypt(String password, SecretKey key, byte[] iv) throws UnsupportedEncodingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
         try {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+            cipher.init(Cipher.ENCRYPT_MODE, key,new IvParameterSpec(iv));
 
             byte[] encrypted = cipher.doFinal(password.getBytes());
             return Base64.getEncoder().encodeToString(encrypted);
@@ -69,11 +71,11 @@ public class CBC {
     }
 
 
-    public static String decrypt(String encryptedPassword, SecretKey key, IvParameterSpec iv) {
+    public static String decrypt(String encryptedPassword, SecretKey key, byte[] iv) {
         try {
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, key, iv);
+            cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
             byte[] original = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword));
 
             return new String(original);
