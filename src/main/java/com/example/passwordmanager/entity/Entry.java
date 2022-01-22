@@ -18,7 +18,7 @@ public class Entry {
     @Column(nullable = false, unique = true)
     private String website;
 
-    @ValidPassword(message = "Password has to be 8 character long, contain minimum 3 digits, 1 uppercase letter and 1 special character")
+//    @ValidPassword(message = "Password has to be 8 character long, contain minimum 3 digits, 1 uppercase letter and 1 special character")
     @Column(nullable = false, unique = true)
     private String password;
 

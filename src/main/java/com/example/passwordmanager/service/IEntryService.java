@@ -11,9 +11,11 @@ public interface IEntryService {
 
     public List<Entry> GetAll(int id);
 
-    public void add(Entry entry);
+    public void add(EditEntryDTO entry);
 
     public void delete(Long id);
     public void edit(EditEntryDTO entry);
+    public String showPassword(Long id);
+    public String getWebsite(Long id);
 
 }

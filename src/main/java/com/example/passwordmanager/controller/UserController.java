@@ -76,7 +76,6 @@ public class UserController {
     public String displayEntriesList(Model model) throws NotFoundException {
         List<Entry> l = userService.getUserPasswords();
         model.addAttribute("passwords", l);
-
         return "dashboard";
 
     }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css} "/>
 </head>
 <body>
 <div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}">
@@ -19,9 +20,29 @@
     <tr th:each="psw : ${passwords}">
         <td th:text="${psw.id}"></td>
         <td th:text="${psw.website}"></td>
-        <td th:text="${psw.password}"></td>
-        <td><a th:href="@{/dashboard/delete/__${psw.id}__}">Delete</a></td>
-        <td><a th:href="@{/dashboard/edit/__${psw.id}__}">Edit</a></td>
+        <td  th:text="${psw.password}" ></td>
+        <td><div type="password" value="elo"></div></td>
+        <td><a th:href="@{/dashboard/delete/__${psw.id}__}"><button class="btn btn-primary">Delete</button></a></td>
+        <td><a th:href="@{/dashboard/edit/__${psw.id}__}"><button class="btn btn-primary">Edit</button></a></td>
+        <td><a th:href="@{/dashboard/show/__${psw.id}__}"><button class="btn btn-primary" >Show password</button></a></td>
+        <td>
+
+
+<!--            <button th:onclick="showPasswordField">Show password</button>-->
+<!--            <form th:action="@{/dashboard/show/__${psw.id}__}" method="post" id="form"  style="visibility: hidden">-->
+
+
+<!--                <div class="form-group">-->
+<!--                    <label>Password</label>-->
+<!--                    <input type="password" placeholder="masterPassword" name="password" id="password" />-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <input id="submitBtn" type="submit" class="btn btn-primary" value="Show">-->
+<!--                </div>-->
+<!--            </form>-->
+
+
+        </td>
 
     </tr>
     </tbody>
@@ -32,5 +53,9 @@
 <a href="dashboard/addEntry">Add new password</a>
 </div>
 
+
+<script type="text/javascript" th:src="@{/js/cssandjs/actions.js}">
+
+</script>
 </body>
 </html>

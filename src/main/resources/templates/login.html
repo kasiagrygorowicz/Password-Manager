@@ -3,7 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css} "/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/assets/bootstrap-input-spinner/bootstrap-input-spinner.js}"></script>
     <title>Login</title>
+
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('submit',(event) =>{
+            e.preventDefault();
+            alert("elo")
+            setTimeout(()=>{
+                return <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+            }, 6000)
+
+
+        });
+    </script>
 </head>
 <body>
 <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
@@ -13,7 +32,7 @@
 <div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}">
 </div>
 
-<form th:action="@{/login}" method="post" th:object="${user}">
+<form th:action="@{/login}" method="post" th:object="${user}" id="loginForm">
   <div class="form-group">
     <label>Email address</label>
     <input type="email" placeholder="email" name="username" id="username"/>
@@ -24,11 +43,15 @@
     <input type="password" placeholder="password" name="password" id="password" />
   </div>
     <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="Create">
+        <input id="submitBtn" type="submit" class="btn btn-primary" value="Create">
     </div>
     <div th:if="${errorMessage}"  th:text="${errorMessage}"class=" alert alert-danger"></div>
 
 </form>
 <a th:href="@{/register}">New user? Sign up here !!!</a>
+
+
+
+
 </body>
 </html>

@@ -19,4 +19,6 @@ public interface IUserService {
     User getCurrent() throws NotFoundException;
 
     List<Entry> getUserPasswords() throws NotFoundException;
+
+    String getMasterPassword();
 }

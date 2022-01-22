@@ -4,11 +4,13 @@ import com.example.passwordmanager.dao.EntryDAO;
 import com.example.passwordmanager.dto.EditEntryDTO;
 import com.example.passwordmanager.entity.Entry;
 import com.example.passwordmanager.entity.User;
+import com.example.passwordmanager.security.aes.CBC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +30,17 @@ public class EntryService implements IEntryService {
     }
 
     @Override
-    public void add(Entry entry) {
+    public void add(EditEntryDTO entry) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        entry.setUser(user);
-        entryDAO.save(entry);
+        if(!passwordEncoder.matches(entry.getMasterPassword(),user.getMasterPassword())){
+            throw new RuntimeException("Wrong master password.\n Cannot edit !!!");
+        }
+        Entry newEntry = new Entry();
+        newEntry.setPassword(entry.getPassword());
+        newEntry.setUser(user);
+        newEntry.setWebsite(entry.getWebsite());
+
+        entryDAO.save(newEntry);
     }
 
 
@@ -54,4 +63,18 @@ public class EntryService implements IEntryService {
         entryDAO.save(e);
 
     }
+
+    @Override
+    public String showPassword(Long id) {
+        Entry e  = entryDAO.getById(id);
+//        SecretKey = CBC.getSecret(e.get)
+        return "elo";
+    }
+
+    @Override
+    public String getWebsite(Long id) {
+        return entryDAO.getById(id).getWebsite();
+    }
+
+
 }

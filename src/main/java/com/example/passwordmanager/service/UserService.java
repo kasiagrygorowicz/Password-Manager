@@ -72,4 +72,16 @@ public class UserService implements IUserService {
         User current = getCurrent();
         return current.getEntries();
     }
+
+    @Override
+    public String getMasterPassword() {
+
+        User user = null;
+        try {
+            user = getCurrent();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        return user.getMasterPassword();
+    }
 }
