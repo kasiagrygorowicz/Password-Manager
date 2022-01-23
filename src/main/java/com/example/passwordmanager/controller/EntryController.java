@@ -65,6 +65,7 @@ public class EntryController {
             return "redirect:/dashboard";
         }
         DecryptPasswordDTO e = entryService.getDecryptPasswordDTO(id);
+
         model.addAttribute("entry",e);
         model.addAttribute("isDecrypted", false);
 
@@ -96,9 +97,9 @@ public class EntryController {
             attributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/dashboard/show/"+id;
         }
+        DecryptPasswordDTO d = new DecryptPasswordDTO(entryService.getWebsite(id),decrypted,id);
         model.addAttribute("isDecrypted", true);
-        model.addAttribute("password",decrypted);
-        model.addAttribute("website",entry.getWebsite());
+       model.addAttribute("decryptedEntry",d);
         return "entry/show-password-form";
     }
 
