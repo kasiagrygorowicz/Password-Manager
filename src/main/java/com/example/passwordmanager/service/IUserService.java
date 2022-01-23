@@ -9,16 +9,25 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
 
-    GetUserInfoDTO add(CreateUserDTO user) throws SQLException;
+    public GetUserInfoDTO add(CreateUserDTO user) throws SQLException;
 
-    User findByEmail(String email) throws ChangeSetPersister.NotFoundException, NotFoundException;
+    public Optional<User> findByEmail(String email);
 
-    User getCurrent() throws NotFoundException;
+    public Optional<User> getCurrent() throws NotFoundException;
 
-    List<Entry> getUserPasswords() throws NotFoundException;
+   public  List<Entry> getUserPasswords() throws NotFoundException;
 
-    String getMasterPassword();
+    public String getMasterPassword();
+    void updateFailedAttempts(User user);
+    void lockUser(User user);
+    boolean isUserStillLocked(User user);
+    void unlockUser(User user);
+    void resetAttempts(User user);
+
+
+
 }

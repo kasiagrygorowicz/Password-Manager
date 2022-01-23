@@ -1,14 +1,12 @@
 package com.example.passwordmanager.controller;
 
-import com.example.passwordmanager.dto.EditEntryDTO;
-import com.example.passwordmanager.entity.Entry;
+import com.example.passwordmanager.dto.DecryptPasswordDTO;
+import com.example.passwordmanager.dto.EntryDTO;
 import com.example.passwordmanager.entity.User;
 import com.example.passwordmanager.security.aes.CBC;
 import com.example.passwordmanager.service.IEntryService;
 import com.example.passwordmanager.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,19 +14,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Principal;
-import java.security.spec.InvalidKeySpecException;
+import java.util.Optional;
 
 @Controller
 public class EntryController {
@@ -45,12 +33,12 @@ public class EntryController {
     @GetMapping("dashboard/addEntry")
     public String displayNewEntryForm(Model model) {
 
-        model.addAttribute("entry", new EditEntryDTO());
+        model.addAttribute("entry", new EntryDTO());
         return "entry/new-entry-form";
     }
 
     @PostMapping("dashboard/addEntry")
-    public String processNewEntryForm(@ModelAttribute("entry") EditEntryDTO entry, RedirectAttributes attributes, BindingResult bindingResult) {
+    public String processNewEntryForm(@ModelAttribute("entry") EntryDTO entry, RedirectAttributes attributes, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             attributes.addFlashAttribute("error", bindingResult.getFieldError().getDefaultMessage());
             return "redirect:/dashboard/addEntry";
@@ -68,28 +56,38 @@ public class EntryController {
     }
 
     @GetMapping("/dashboard/show/{id}")
-    public String showPassword(@PathVariable Long id, Model model) {
-        String website = entryService.getWebsite(id);
-        model.addAttribute("website", website);
-        model.addAttribute("masterPasswordEntered", null);
-        model.addAttribute("id", id);
+    public String showPassword(@PathVariable Long id, Model model,RedirectAttributes attributes) {
+        DecryptPasswordDTO e = entryService.getDecryptPasswordDTO(id);
+        model.addAttribute("entry",e);
         model.addAttribute("isDecrypted", false);
 
         return "entry/show-password-form";
     }
 
     @PostMapping("/dashboard/show/{id}")
-    public String showPassword(@ModelAttribute("masterPasswordEntered") String masterPassword, RedirectAttributes attributes, Model model, @PathVariable Long id) {
-        System.out.println(masterPassword);
-        if (!passwordEncoder.matches("Password123$",userService.getMasterPassword())) {
-
+    public String showPassword(@ModelAttribute("entry") DecryptPasswordDTO entry, RedirectAttributes attributes, Model model, @PathVariable Long id) {
+        if (!passwordEncoder.matches(entry.getMasterPassword(),userService.getMasterPassword())) {
             attributes.addFlashAttribute("error", "Master password not correct");
             return "redirect:/dashboard/show/"+id;
         }
-        String website = entryService.getWebsite(id);
-        model.addAttribute("masterPassword", "decrypted");
-        model.addAttribute("website", website);
+            String decrypted = null;
+        try{
+            String password = entryService.getEntry(entry.getId()).getPassword();
+            Optional<User> u = userService.getCurrent();
+            if(u.isPresent()){
+                decrypted = entryService.decrypt(password,entry.getMasterPassword(),u.get().getIv(),u.get().getSalt());
+            }else{
+                throw new RuntimeException("Current user not found");
+            }
+
+
+        }catch(Exception e){
+            attributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/dashboard/show/"+id;
+        }
         model.addAttribute("isDecrypted", true);
+        model.addAttribute("password",decrypted);
+        model.addAttribute("website",entry.getWebsite());
         return "entry/show-password-form";
     }
 
@@ -102,12 +100,12 @@ public class EntryController {
 
     @RequestMapping("dashboard/edit/{id}")
     public String displayEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("entry", new EditEntryDTO(id));
+        model.addAttribute("entry", new EntryDTO(entryService.getWebsite(id),id));
         return "entry/edit-form";
     }
 
     @PostMapping("dashboard/edit/{id}")
-    public String processEditEntry(@Valid @ModelAttribute("entry") EditEntryDTO entry, Model model) {
+    public String processEditEntry(@Valid @ModelAttribute("entry") EntryDTO entry, Model model) {
         try {
             entryService.edit(entry);
         } catch (Exception e) {

@@ -16,10 +16,15 @@ import org.springframework.stereotype.Service;
 import javassist.NotFoundException;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
+
+    public static final int MAX_FAILED_ATTEMPTS = 3;
+    private static final long LOCK_TIME = 24 * 60 * 60 * 1000;
 
     @Autowired
     private UserDAO userDAO;
@@ -45,18 +50,17 @@ public class UserService implements IUserService {
 
 
     @Override
-    public User findByEmail(String email) {
-        User user = userDAO.findByUsername(email);
-        if (user == null) {
-            throw new RuntimeException("Account with email:  " + email + " does not exist");
-        }
+    public Optional<User> findByEmail(String email) {
+        Optional<User> user = userDAO.findByUsername(email);
         return user;
     }
 
+
+
     @Override
-    public User getCurrent() throws NotFoundException {
+    public Optional<User> getCurrent() throws NotFoundException {
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        String username = "";
+        String username = null;
         User user;
         if (null != securityContext.getAuthentication()) {
             if (securityContext.getAuthentication().getPrincipal().getClass() == String.class) {
@@ -72,21 +76,70 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<Entry> getUserPasswords() throws NotFoundException {
-        User current = getCurrent();
-        return current.getEntries();
+    public List<Entry> getUserPasswords() {
+        Optional<User> current = null;
+        try {
+            current = getCurrent();
+            return current.get().getEntries();
+
+        } catch (NotFoundException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 
     @Override
     public String getMasterPassword() {
 
-        User user = null;
+        Optional<User> current = null;
         try {
-            user = getCurrent();
+            current = getCurrent();
+            return current.get().getMasterPassword();
         } catch (NotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-        System.out.println(user.getMasterPassword());
-        return user.getMasterPassword();
     }
+
+    @Override
+    public void updateFailedAttempts(User user){
+        int attempts = user.getLoginAttempts();
+        user.setLoginAttempts(attempts+1);
+        userDAO.save(user);
+    }
+
+    @Override
+    public void lockUser(User user){
+        user.setActive(false);
+        user.setLockTime(new Date());
+        userDAO.save(user);
+    }
+
+    @Override
+    public boolean isUserStillLocked(User user){
+        long current = System.currentTimeMillis();
+        System.out.println(current);
+
+        long time = user.getLockTime().getTime();
+        System.out.println(time);
+        return time + LOCK_TIME > current;
+
+    }
+
+    @Override
+    public void unlockUser(User user){
+        user.setLockTime(null);
+        user.setLoginAttempts(0);
+        user.setActive(true);
+        userDAO.save(user);
+    }
+
+    @Override
+    public void resetAttempts(User user){
+        user.setLoginAttempts(0);
+        user.setActive(true);
+        user.setLockTime(null);
+        userDAO.save(user);
+    }
+
+
 }

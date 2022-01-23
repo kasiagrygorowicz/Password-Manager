@@ -3,58 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css} "/>
+    <link th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css} " th:rel="stylesheet"/>
+    <style>
+        .website {
+            width: 40%;
+            margin: 20px;
+
+        }
+
+        .option {
+            width: 20%;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+
+        .navbar-brand {
+            margin-left: 20px;
+        }
+
+        .title {
+            margin-left: 20px;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .d-flex {
+            align-items: center;
+
+
+        }
+
+        .alert {
+            width: 40%;
+            margin-left: 20px;
+        }
+
+    </style>
 </head>
+
+
 <body>
-<div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}">
+<nav class=" nav navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Password Manager</a>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link " href="dashboard/addEntry">Add new password</a>
+        </li>
+    </ul>
+    <a class="nav-link text-danger ml-auto" href="/logout">Logout</a>
+</nav>
+
+
+<div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
+
+
+<div class="title text-dark">Saved websites:</div>
+
+<div th:each="psw : ${passwords}">
+
+    <div class="d-flex flex-row ">
+        <a class="website" th:href="${psw.website}" th:text="${psw.website}"></a>
+
+        <div class="option">
+            <a class="btn btn-primary " th:href="@{/dashboard/delete/__${psw.id}__}">
+                Delete
+            </a>
+            <a class="btn btn-primary " th:href="@{/dashboard/edit/__${psw.id}__}">
+                Edit
+            </a>
+            <a class="btn btn-primary " th:href="@{/dashboard/show/__${psw.id}__}">
+                Show password
+            </a>
+        </div>
+    </div>
+
 </div>
-<table class="table">
-    <thead>
-    <tr>
-        <th>id</th>
-        <th>website</th>
-        <th>password</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="psw : ${passwords}">
-        <td th:text="${psw.id}"></td>
-        <td th:text="${psw.website}"></td>
-        <td  th:text="${psw.password}" ></td>
-        <td><div type="password" value="elo"></div></td>
-        <td><a th:href="@{/dashboard/delete/__${psw.id}__}"><button class="btn btn-primary">Delete</button></a></td>
-        <td><a th:href="@{/dashboard/edit/__${psw.id}__}"><button class="btn btn-primary">Edit</button></a></td>
-        <td><a th:href="@{/dashboard/show/__${psw.id}__}"><button class="btn btn-primary" >Show password</button></a></td>
-        <td>
-
-
-<!--            <button th:onclick="showPasswordField">Show password</button>-->
-<!--            <form th:action="@{/dashboard/show/__${psw.id}__}" method="post" id="form"  style="visibility: hidden">-->
-
-
-<!--                <div class="form-group">-->
-<!--                    <label>Password</label>-->
-<!--                    <input type="password" placeholder="masterPassword" name="password" id="password" />-->
-<!--                </div>-->
-<!--                <div class="form-group">-->
-<!--                    <input id="submitBtn" type="submit" class="btn btn-primary" value="Show">-->
-<!--                </div>-->
-<!--            </form>-->
-
-
-        </td>
-
-    </tr>
-    </tbody>
-</table>
-
-<div class="container">
-<a href="/logout">Logout</a>
-<a href="dashboard/addEntry">Add new password</a>
-</div>
-
-
-<script type="text/javascript" th:src="@{/js/cssandjs/actions.js}">
 
 </script>
 </body>

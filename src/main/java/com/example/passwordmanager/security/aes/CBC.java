@@ -28,6 +28,7 @@ public class CBC {
 
         byte[] iv = new byte[16];
         random.nextBytes(iv);
+        System.out.println(iv.length);;
 
         return iv;
 
@@ -40,7 +41,7 @@ public class CBC {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        byte[] salt = new byte[16];
+        byte[] salt = new byte[32];
         random.nextBytes(salt);
         return salt;
     }

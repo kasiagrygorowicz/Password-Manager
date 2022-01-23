@@ -48,6 +48,7 @@
     <div th:if="${errorMessage}"  th:text="${errorMessage}"class=" alert alert-danger"></div>
 
 </form>
+<div style="margin-top: 20px" th:if="${param.error}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}" class="alert alert-danger" role="alert"></div>
 <a th:href="@{/register}">New user? Sign up here !!!</a>
 
 

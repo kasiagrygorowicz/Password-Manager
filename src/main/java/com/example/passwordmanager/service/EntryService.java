@@ -1,9 +1,11 @@
 package com.example.passwordmanager.service;
 
 import com.example.passwordmanager.dao.EntryDAO;
-import com.example.passwordmanager.dto.EditEntryDTO;
+import com.example.passwordmanager.dto.DecryptPasswordDTO;
+import com.example.passwordmanager.dto.EntryDTO;
 import com.example.passwordmanager.entity.Entry;
 import com.example.passwordmanager.entity.User;
+import com.example.passwordmanager.mapper.EntryMapper;
 import com.example.passwordmanager.security.aes.CBC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,17 +16,13 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.EntityNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EntryService implements IEntryService {
@@ -41,7 +39,7 @@ public class EntryService implements IEntryService {
     }
 
     @Override
-    public void add(EditEntryDTO entry) {
+    public void add(EntryDTO entry) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!passwordEncoder.matches(entry.getMasterPassword(),user.getMasterPassword())){
             throw new RuntimeException("Wrong master password.\n Cannot add entry !!!");
@@ -74,7 +72,7 @@ public class EntryService implements IEntryService {
     }
 
     @Override
-    public void edit(EditEntryDTO entry) {
+    public void edit(EntryDTO entry) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!passwordEncoder.matches(entry.getMasterPassword(),user.getMasterPassword())){
             throw new RuntimeException("Wrong master password.\n Cannot edit !!!");
@@ -98,6 +96,38 @@ public class EntryService implements IEntryService {
     @Override
     public String getWebsite(Long id) {
         return entryDAO.getById(id).getWebsite();
+    }
+
+    @Override
+    public EntryDTO getEntry(Long id) {
+        return EntryMapper.mapEntryToEntryDTO(entryDAO.getById(id));
+    }
+
+    @Override
+    public EntryDTO decrypt(EntryDTO entry) {
+        return null;
+    }
+
+    @Override
+    public DecryptPasswordDTO getDecryptPasswordDTO(Long id) {
+        Entry e = entryDAO.getById(id);
+        return new DecryptPasswordDTO(id,e.getWebsite());
+    }
+
+    @Override
+    public String decrypt(String password, String masterPassword,byte[] iv, byte[] salt)  {
+        SecretKey key = null;
+        String d =null;
+        try {
+            key = CBC.getSecret(masterPassword,salt);
+            d=CBC.decrypt(password,key,iv);
+        } catch (NoSuchAlgorithmException e) {
+           throw new RuntimeException(e.getMessage());
+        } catch (InvalidKeySpecException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return d;
+
     }
 
 
