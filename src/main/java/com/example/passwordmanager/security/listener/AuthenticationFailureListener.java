@@ -19,7 +19,7 @@ import java.util.Optional;
 import static com.example.passwordmanager.service.UserService.MAX_FAILED_ATTEMPTS;
 
 @Component
-public class AuthenticationFailureListener extends SimpleUrlAuthenticationFailureHandler {
+public class AuthenticationFailureListener implements AuthenticationFailureHandler {
 
     @Autowired
     private IUserService userService;
@@ -30,6 +30,8 @@ public class AuthenticationFailureListener extends SimpleUrlAuthenticationFailur
         String email = request.getParameter("username");
         Optional<User> user = userService.findByEmail(email);
         exception = new BadCredentialsException("Could not login. Wrong credentials");
+        request.setAttribute("param", "error");
+        response.sendRedirect("/login/?error");
 
         if (user.isPresent()) {
             User u = user.get();
@@ -51,8 +53,8 @@ public class AuthenticationFailureListener extends SimpleUrlAuthenticationFailur
                 }
             }
 
-            super.setDefaultFailureUrl("/login/?error");
-            super.onAuthenticationFailure(request, response, exception);
+//            super.setDefaultFailureUrl("/login/?error");
+//            super.onAuthenticationFailure(request, response, exception);
         }
     }
 }
