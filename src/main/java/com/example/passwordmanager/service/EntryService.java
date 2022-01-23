@@ -33,6 +33,7 @@ public class EntryService implements IEntryService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     @Override
     public List<Entry> GetAll(int id) {
         return null;
@@ -72,7 +73,7 @@ public class EntryService implements IEntryService {
     }
 
     @Override
-    public void edit(EntryDTO entry) {
+    public void edit(EntryDTO entry) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!passwordEncoder.matches(entry.getMasterPassword(),user.getMasterPassword())){
             throw new RuntimeException("Wrong master password.\n Cannot edit !!!");
@@ -81,16 +82,11 @@ public class EntryService implements IEntryService {
                 () -> new EntityNotFoundException("You are trying to edit entry that does not exist"));
 
         e.setWebsite(entry.getWebsite());
-        e.setPassword(entry.getPassword());
+
+        SecretKey key = CBC.getSecret(entry.getMasterPassword(), user.getSalt());
+        e.setPassword(CBC.encrypt(entry.getPassword(),key, user.getIv()));
         entryDAO.save(e);
 
-    }
-
-    @Override
-    public String showPassword(Long id) {
-        Entry e  = entryDAO.getById(id);
-//        SecretKey = CBC.getSecret(e.get)
-        return "elo";
     }
 
     @Override
@@ -103,10 +99,6 @@ public class EntryService implements IEntryService {
         return EntryMapper.mapEntryToEntryDTO(entryDAO.getById(id));
     }
 
-    @Override
-    public EntryDTO decrypt(EntryDTO entry) {
-        return null;
-    }
 
     @Override
     public DecryptPasswordDTO getDecryptPasswordDTO(Long id) {

@@ -29,9 +29,6 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-
-
-
     @GetMapping("/register")
     public String displayRegistrationForm(Model model) {
         model.addAttribute("user", new CreateUserDTO());
@@ -70,7 +67,6 @@ public class UserController {
         }
         return "redirect:/login";
     }
-
 
     @GetMapping("/dashboard")
     public String displayEntriesList(Model model) throws NotFoundException {

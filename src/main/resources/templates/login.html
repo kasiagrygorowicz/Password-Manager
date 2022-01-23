@@ -3,26 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css} "/>
-    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-    <script th:src="@{/assets/bootstrap-input-spinner/bootstrap-input-spinner.js}"></script>
     <title>Login</title>
 
-
-    <script>
-        document.getElementById('submitBtn').addEventListener('submit',(event) =>{
-            e.preventDefault();
-            alert("elo")
-            setTimeout(()=>{
-                return <div className="spinner-border text-primary" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-            }, 6000)
-
-
-        });
-    </script>
+<style>
+    .spinner-border{
+        display: none;
+        /*width:100%;*/
+        /*height:100%;*/
+    }
+</style>
 </head>
 <body>
 <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
@@ -52,7 +41,26 @@
 <a th:href="@{/register}">New user? Sign up here !!!</a>
 
 
+<div id="spinner"class="spinner-border " role="status">
 
+</div>
+
+
+
+<script th:inline="javascript">
+    var submitBtn = document.getElementById("loginForm")
+    var spinner = document.getElementById("spinner")
+
+    submitBtn.addEventListener("submit",(event)=>{
+        spinner.style.display="block"
+        event.preventDefault()
+        setTimeout(()=>{
+            spinner.style.display="none"
+            submitBtn.submit()
+        },5000)
+    })
+
+</script>
 
 </body>
 </html>

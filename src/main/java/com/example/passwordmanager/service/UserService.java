@@ -34,7 +34,7 @@ public class UserService implements IUserService {
 
     @Override
     public GetUserInfoDTO add(CreateUserDTO user) throws SQLException {
-        if (userDAO.findByUsername(user.getUsername()) != null) {
+        if (userDAO.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("This user already exists");
         }
         User u = UserMapper.CreateUserDTOToUser(user);
