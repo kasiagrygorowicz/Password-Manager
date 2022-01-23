@@ -2,46 +2,51 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css} "/>
+    <link th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css} " th:rel="stylesheet"/>
     <title>Login</title>
 
-<style>
-    .spinner-border{
-        display: none;
-        /*width:100%;*/
-        /*height:100%;*/
-    }
-</style>
+    <style>
+        .spinner-border{
+            display:none;
+
+            margin: 100px auto;
+            text-align: center;
+
+
+        }
+
+    </style>
 </head>
 <body>
 <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/1.12.9-1/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js}"></script>
 
-<div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}">
+<div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}">
 </div>
 
-<form th:action="@{/login}" method="post" th:object="${user}" id="loginForm">
-  <div class="form-group">
-    <label>Email address</label>
-    <input type="email" placeholder="email" name="username" id="username"/>
-  </div>
-
-  <div class="form-group">
-    <label>Password</label>
-    <input type="password" placeholder="password" name="password" id="password" />
-  </div>
+<form id="loginForm" method="post" th:action="@{/login}" th:object="${user}">
     <div class="form-group">
-        <input id="submitBtn" type="submit" class="btn btn-primary" value="Create">
+        <label>Email address</label>
+        <input id="username" name="username" placeholder="email" type="email"/>
     </div>
-    <div th:if="${errorMessage}"  th:text="${errorMessage}"class=" alert alert-danger"></div>
+
+    <div class="form-group">
+        <label>Password</label>
+        <input id="password" name="password" placeholder="password" type="password"/>
+    </div>
+    <div class="form-group">
+        <input class="btn btn-primary" id="submitBtn" type="submit" value="Login">
+    </div>
+    <div class=" alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 
 </form>
-<div style="margin-top: 20px" th:if="${param.error}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}" class="alert alert-danger" role="alert"></div>
+<div class="alert alert-danger" role="alert" style="margin-top: 20px"
+     th:if="${param.error}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></div>
 <a th:href="@{/register}">New user? Sign up here !!!</a>
 
 
-<div id="spinner"class="spinner-border " role="status">
+<div class="spinner-border" id="spinner" role="status">
 
 </div>
 
@@ -51,13 +56,8 @@
     var submitBtn = document.getElementById("loginForm")
     var spinner = document.getElementById("spinner")
 
-    submitBtn.addEventListener("submit",(event)=>{
-        spinner.style.display="block"
-        event.preventDefault()
-        setTimeout(()=>{
-            spinner.style.display="none"
-            submitBtn.submit()
-        },5000)
+    submitBtn.addEventListener("submit", (event) => {
+        spinner.style.display = "block"
     })
 
 </script>

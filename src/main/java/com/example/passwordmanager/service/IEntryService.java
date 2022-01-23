@@ -26,9 +26,10 @@ public interface IEntryService {
 
     public String getWebsite(Long id);
 
-    public EntryDTO getEntry(Long id);
+    public EntryDTO getEntryDTO(Long id);
 
     public DecryptPasswordDTO getDecryptPasswordDTO(Long id);
+    Entry getEntry(Long id);
 
 
     String decrypt(String password, String masterPassword, byte[] iv, byte[] salt);

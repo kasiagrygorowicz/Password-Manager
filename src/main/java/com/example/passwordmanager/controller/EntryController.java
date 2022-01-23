@@ -2,10 +2,11 @@ package com.example.passwordmanager.controller;
 
 import com.example.passwordmanager.dto.DecryptPasswordDTO;
 import com.example.passwordmanager.dto.EntryDTO;
+import com.example.passwordmanager.entity.Entry;
 import com.example.passwordmanager.entity.User;
-import com.example.passwordmanager.security.aes.CBC;
 import com.example.passwordmanager.service.IEntryService;
 import com.example.passwordmanager.service.IUserService;
+import com.example.passwordmanager.service.IValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -14,12 +15,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.crypto.SecretKey;
 import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
 public class EntryController {
+
+    @Autowired
+    private IValidationService validationService;
 
     @Autowired
     private IEntryService entryService;
@@ -57,6 +60,10 @@ public class EntryController {
 
     @GetMapping("/dashboard/show/{id}")
     public String showPassword(@PathVariable Long id, Model model,RedirectAttributes attributes) {
+        if(!validationService.resourceBelongsToUser(id)){
+            attributes.addFlashAttribute("error","You have tried to access someone else's account !!!");
+            return "redirect:/dashboard";
+        }
         DecryptPasswordDTO e = entryService.getDecryptPasswordDTO(id);
         model.addAttribute("entry",e);
         model.addAttribute("isDecrypted", false);
@@ -66,13 +73,17 @@ public class EntryController {
 
     @PostMapping("/dashboard/show/{id}")
     public String showPassword(@ModelAttribute("entry") DecryptPasswordDTO entry, RedirectAttributes attributes, Model model, @PathVariable Long id) {
+        if(!validationService.resourceBelongsToUser(id)){
+            attributes.addFlashAttribute("error","You have tried to access someone else's account !!!");
+            return "redirect:/dashboard";
+        }
         if (!passwordEncoder.matches(entry.getMasterPassword(),userService.getMasterPassword())) {
             attributes.addFlashAttribute("error", "Master password not correct");
             return "redirect:/dashboard/show/"+id;
         }
             String decrypted = null;
         try{
-            String password = entryService.getEntry(entry.getId()).getPassword();
+            String password = entryService.getEntryDTO(entry.getId()).getPassword();
             Optional<User> u = userService.getCurrent();
             if(u.isPresent()){
                 decrypted = entryService.decrypt(password,entry.getMasterPassword(),u.get().getIv(),u.get().getSalt());
@@ -93,19 +104,29 @@ public class EntryController {
 
 
     @RequestMapping("/dashboard/delete/{id}")
-    public String deleteEntry(@PathVariable Long id) {
+    public String deleteEntry(@PathVariable Long id,RedirectAttributes attributes) {
+        if(!validationService.resourceBelongsToUser(id)){
+            attributes.addFlashAttribute("error","You have tried to access someone else's account !!!");
+            return "redirect:/dashboard";
+        }
         entryService.delete(id);
         return "redirect:/dashboard";
     }
 
-    @RequestMapping("dashboard/edit/{id}")
-    public String displayEditForm(@PathVariable Long id, Model model) {
+    @GetMapping("dashboard/edit/{id}")
+    public String displayEditForm(@PathVariable Long id, Model model,RedirectAttributes attributes) {
+        if(!validationService.resourceBelongsToUser(id)){
+            attributes.addFlashAttribute("error","You have tried to access someone else's account !!!");
+            return "redirect:/dashboard";
+        }
+        Entry e = (Entry) model.getAttribute("psw");
+        System.out.println(e.getId());
         model.addAttribute("entry", new EntryDTO(entryService.getWebsite(id),id));
         return "entry/edit-form";
     }
 
-    @PostMapping("dashboard/edit/{id}")
-    public String processEditEntry(@Valid @ModelAttribute("entry") EntryDTO entry, Model model) {
+    @PostMapping("dashboard/edit/")
+    public String processEditEntry(@Valid @ModelAttribute("entry") EntryDTO entry, Model model,RedirectAttributes attributes) {
         try {
             entryService.edit(entry);
         } catch (Exception e) {

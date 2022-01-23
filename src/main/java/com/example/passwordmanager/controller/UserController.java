@@ -29,6 +29,11 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    @GetMapping("/")
+    public String redirectToLogin(){
+        return "redirect:/login";
+    }
+
     @GetMapping("/register")
     public String displayRegistrationForm(Model model) {
         model.addAttribute("user", new CreateUserDTO());

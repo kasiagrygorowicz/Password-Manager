@@ -20,10 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -31,18 +27,12 @@ import java.io.IOException;
 public class PasswordManagerSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
-//    private MyUserDetailsService myUserDetailsService;
-
-//    public PasswordManagerSecurityConfiguration(MyUserDetailsService myUserDetailsService){
-//        this.myUserDetailsService=myUserDetailsService;
-//    }
-
     @Autowired
     private MyUserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        return  new BCryptPasswordEncoder();
+        return  new BCryptPasswordEncoder(14);
     }
 
 
@@ -54,10 +44,8 @@ public class PasswordManagerSecurityConfiguration extends WebSecurityConfigurerA
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-//        http.addFilterBefore(
-//                new LoginPageFilter(), DefaultLoginPageGeneratingFilter.class);
-        http.authorizeRequests()
-                .antMatchers("/dashboard").authenticated()
+        http.csrf().disable().authorizeRequests()
+                .antMatchers("/dashboard/**").authenticated()
                 .antMatchers("/login", "/register")
                 .permitAll().and().formLogin().loginPage("/login")
                 .loginProcessingUrl("/login")
@@ -65,9 +53,6 @@ public class PasswordManagerSecurityConfiguration extends WebSecurityConfigurerA
                 .usernameParameter("username")
                 .failureHandler(authenticationFailureHandler())
                 .successHandler(authenticationSuccessHandler())
-
-
-
                 .and()
                 .logout()
                 .logoutUrl("/logout")

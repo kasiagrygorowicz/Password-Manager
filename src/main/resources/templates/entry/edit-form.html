@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<form th:action="@{/dashboard/edit/__${entry.id}__}" method="post" th:object="${entry}">
+<form th:action="@{/dashboard/edit/}" method="post" th:object="${entry}">
     <div class="form-group">
         <label>Website</label>
         <input type="text" th:value="*{website}" th:field="*{website}"/>

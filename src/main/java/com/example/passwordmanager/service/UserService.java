@@ -63,14 +63,13 @@ public class UserService implements IUserService {
         String username = null;
         User user;
         if (null != securityContext.getAuthentication()) {
-            if (securityContext.getAuthentication().getPrincipal().getClass() == String.class) {
-                username = (String) securityContext.getAuthentication().getPrincipal();
 
-            } else {
                 user = (User) securityContext.getAuthentication().getPrincipal();
                 username = user.getUsername();
 
-            }
+
+        }else{
+            throw new RuntimeException("Could not find user");
         }
         return findByEmail(username);
     }
@@ -140,6 +139,8 @@ public class UserService implements IUserService {
         user.setLockTime(null);
         userDAO.save(user);
     }
+
+
 
 
 }

@@ -7,6 +7,7 @@ import com.example.passwordmanager.entity.Entry;
 import com.example.passwordmanager.entity.User;
 import com.example.passwordmanager.mapper.EntryMapper;
 import com.example.passwordmanager.security.aes.CBC;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -95,8 +96,13 @@ public class EntryService implements IEntryService {
     }
 
     @Override
-    public EntryDTO getEntry(Long id) {
+    public EntryDTO getEntryDTO(Long id) {
         return EntryMapper.mapEntryToEntryDTO(entryDAO.getById(id));
+    }
+
+    @Override
+    public Entry getEntry(Long id) {
+        return entryDAO.getById(id);
     }
 
 

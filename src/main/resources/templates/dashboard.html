@@ -37,7 +37,7 @@
 
         .alert {
             width: 100%;
-            margin-left: 20px;
+           margin: auto;
         }
 
     </style>
@@ -56,6 +56,7 @@
 </nav>
 
 
+<div th:if="${error}"  th:text="${error}"class=" alert alert-danger"></div>
 <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
 
 
