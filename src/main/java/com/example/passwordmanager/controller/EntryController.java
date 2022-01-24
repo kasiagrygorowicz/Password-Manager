@@ -120,15 +120,21 @@ public class EntryController {
             attributes.addFlashAttribute("error","You have tried to access someone else's account !!!");
             return "redirect:/dashboard";
         }
-        Entry e = (Entry) model.getAttribute("psw");
-        System.out.println(e.getId());
+
         model.addAttribute("entry", new EntryDTO(entryService.getWebsite(id),id));
         return "entry/edit-form";
     }
 
-    @PostMapping("dashboard/edit/")
-    public String processEditEntry(@Valid @ModelAttribute("entry") EntryDTO entry, Model model,RedirectAttributes attributes) {
+    @PostMapping("dashboard/edit/{id}")
+    public String processEditEntry(@Valid @ModelAttribute("entry") EntryDTO entry,@PathVariable Long id, Model model,RedirectAttributes attributes) {
+        if(!validationService.resourceBelongsToUser(id)){
+            attributes.addFlashAttribute("error","You have tried to access someone else's account !!!");
+            return "redirect:/dashboard";
+        }
+
         try {
+
+            entry.setId(id);
             entryService.edit(entry);
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
