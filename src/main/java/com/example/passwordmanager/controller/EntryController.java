@@ -49,11 +49,13 @@ public class EntryController {
 
             try {
                 entryService.add(entry);
+                attributes.addFlashAttribute("success", "New password was added successfully");
 
             } catch (Exception e) {
-                attributes.addFlashAttribute("\"error\"", e.getMessage());
+                attributes.addFlashAttribute("error", e.getMessage());
+                return "redirect:/dashboard/addEntry";
             }
-            attributes.addFlashAttribute("success", "New password was added successfully");
+
             return "redirect:/dashboard";
         }
     }

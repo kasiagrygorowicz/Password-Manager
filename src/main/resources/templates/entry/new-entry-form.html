@@ -1,29 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Add Entry</title>
+    <link th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css} " th:rel="stylesheet"/>
 </head>
+
+<style>
+
+    /*body {*/
+    /*    background-color: #6C7A89;*/
+    /*}*/
+
+    form > div {
+        margin-top: 20px;
+    }
+
+    form > div {
+        border-color: black;
+    }
+
+    .myDiv {
+        margin: auto;
+        width: 50vh;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    div >label {
+
+        font-size: xxx-large;
+        color:white;
+    }
+
+
+
+</style>
 <body>
-<form th:action="@{/dashboard/addEntry}" method="post" th:object="${entry}">
+<div th:insert="/shared/navbar :: header"/>
+<div class="myDiv">
 
-    <div class="form-group">
-        <label>Website</label>
-        <input type="text"  th:field="*{website}" placeholder="www.google.com"/>
+    <div>
+    <label> Add new password</label>
     </div>
-    <div class="form-group">
-        <label>Password</label>
-        <input type="password"  th:field="*{password}" />
-    </div>
-    <div class="form-group">
-        <label>Master Password</label>
-        <input type="password"  th:field="*{masterPassword}" />
-    </div>
-    <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="Create">
-    </div>
-    <div th:if="${error}" th:text="${error}" class=" alert alert-danger"></div>
-</form>
+    <form method="post" th:action="@{/dashboard/addEntry}" th:object="${entry}">
 
+        <div class="form-group align-content-between">
+            <input class="form-control bg-dark  border-dark text-white" placeholder="website address" th:field="*{website}"
+                   type="text"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control bg-dark  border-dark text-white"  placeholder="website password" th:field="*{password}" type="password"/>
+        </div>
+        <div class="form-group">
+
+            <input class="form-control bg-dark  border-dark text-white"  placeholder="master password" th:field="*{masterPassword}" type="password"/>
+        </div>
+        <div class="d-flex flex-row" style="justify-content: space-between">
+            <input class="btn btn-dark" style="width:45%;" type="submit" value="Add">
+            <a class="btn btn-outline-dark" href="/dashboard" style="width:45%;" type="submit">Cancel</a>
+        </div>
+        <div class=" alert alert-danger" th:if="${error}" th:text="${error}"></div>
+    </form>
+</div>
+
+
+<script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/1.12.9-1/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.0.0/js/bootstrap.min.js}"></script>
 </body>
 </html>

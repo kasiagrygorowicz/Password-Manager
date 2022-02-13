@@ -15,13 +15,6 @@
             width: 20%;
         }
 
-        .nav {
-            margin-bottom: 20px;
-        }
-
-        .navbar-brand {
-            margin-left: 20px;
-        }
 
         .title {
             margin-left: 20px;
@@ -45,43 +38,46 @@
 
 
 <body>
-<nav class=" nav navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Password Manager</a>
-    <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-            <a class="nav-link " href="dashboard/addEntry">Add new password</a>
-        </li>
-    </ul>
-    <a class="nav-link text-danger ms-auto" href="/logout">Logout</a>
-</nav>
-
+<div th:insert="shared/navbar :: header"/>
 
 <div th:if="${error}"  th:text="${error}"class=" alert alert-danger"></div>
 <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
 
 
 <div class="title text-dark">Saved websites:</div>
-
+<table class="table table-dark table-striped">
+    <tbody>
 <div th:each="psw : ${passwords}">
 
-    <div class="d-flex flex-row ">
+    <tr>
+        <td>
         <a class="website" th:href="${psw.website}" th:text="${psw.website}"></a>
-
-        <div class="option">
+        </td>
+        <td>
             <a class="btn btn-primary " th:href="@{/dashboard/delete/__${psw.id}__}">
                 Delete
             </a>
+        </td>
+        <td>
             <a class="btn btn-primary " th:href="@{/dashboard/edit/__${psw.id}__}">
                 Edit
             </a>
+        </td>
+        <td>
             <a class="btn btn-primary " th:href="@{/dashboard/show/__${psw.id}__}">
                 Show password
             </a>
-        </div>
-    </div>
+        </td>
+
+    </tr>
 
 </div>
+    </tbody>
+</table>
 
-</script>
+<script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/1.12.9-1/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.0.0/js/bootstrap.min.js}"></script>
+
 </body>
 </html>
